@@ -9,24 +9,30 @@
 #include "config.h"
 #define _XTAL_FREQ 8000000        // this is used by the __delay_ms(xx) and __delay_us(xx) functions
 
-static unsigned int prt;
+static unsigned char pinCS;
 
-void initMCU(void);
+
+void mcuInit(void);
 char rtcData(char);
 void rtcAddr(char);
 void rtcToggleCS(void);
 void rtcInit(void);
+void rtcTest(void);
 
 void main(void) {
 
     char readTest;
 
-    initMCU();
-
-    prt = 0x00;
-    PORTA = prt;
+    mcuInit();
 
     rtcInit();
+
+    rtcTest();
+    
+    return;
+}
+
+void rtcTest(void){
 
     rtcToggleCS();
     rtcAddr(0x80);
@@ -44,11 +50,11 @@ void main(void) {
         rtcToggleCS();
         readTest = 0x00;
     }
-    
+
     return;
 }
 
-void initMCU(void){
+void mcuInit(void){
 
     TRISB = 0b00000010;
     OPTION_REG = 0x00;
@@ -56,6 +62,10 @@ void initMCU(void){
     OSCCON = 0b01110000;
     SSPSTAT = 0b00000000;
     SSPCON = 0b00100010;
+
+    pinCS = 0x01;
+    PORTA = 0x00;
+
     return;
 }
 
@@ -78,10 +88,12 @@ void rtcAddr(char addr){
 }
 
 void rtcToggleCS(void){
+    char tmp;
 
     __delay_us(4);
-    prt = prt ^ 0b0000000000000001;
-    PORTA = prt;
+    tmp = PORTA;
+    tmp = tmp ^ pinCS;
+    PORTA = tmp;
     __delay_us(4);
     
     return;
