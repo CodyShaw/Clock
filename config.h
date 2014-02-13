@@ -18,4 +18,7 @@
 #pragma config CCPMX = RB2      // CCP1 Pin Selection bit (CCP1 function on RB2)
 #pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
 
+#define _XTAL_FREQ 8000000       // this is used by the __delay_ms(xx) and __delay_us(xx) functions
+
+
 
