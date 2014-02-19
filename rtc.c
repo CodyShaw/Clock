@@ -29,8 +29,8 @@ void rtcTest(void){
     rtcToggleCS();
     rtcAddr(0x80);
     rtcData(0x00);
-    rtcData(0x00);
-    rtcData(0x00);
+    rtcData(0x59);
+    rtcData(0x20);
     rtcToggleCS();
 
     while(1){
