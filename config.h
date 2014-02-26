@@ -1,7 +1,7 @@
 
 // PIC16F818 Configuration Bit Settings
-
-#include <xc.h>
+#ifndef CONFIG_H
+#define	CONFIG_H
 
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
@@ -18,7 +18,20 @@
 #pragma config CCPMX = RB2      // CCP1 Pin Selection bit (CCP1 function on RB2)
 #pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
 
+#include <xc.h>
+
 #define _XTAL_FREQ 8000000       // this is used by the __delay_ms(xx) and __delay_us(xx) functions
+
+
+unsigned char RTC_CS;
+unsigned char SRD_CLOCK;
+unsigned char SRD_DATA;
+unsigned char SRD_MIN;
+unsigned char SRD_TMIN;
+unsigned char SRD_HR;
+unsigned char SRD_THR;
+
+#endif	/* CONFIG_H */
 
 
 

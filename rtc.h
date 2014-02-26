@@ -11,8 +11,11 @@
 char rtcData(char);
 void rtcAddr(char);
 void rtcToggleCS(void);
-void rtcInit(char);
+void rtcInit(void);
 void rtcTest(void);
+char rtcGetSeconds(void);
+char rtcGetMinutes(void);
+char rtcGetHours(void);
 
 #endif	/* RTC_H */
 
