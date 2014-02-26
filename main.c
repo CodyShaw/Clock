@@ -18,33 +18,26 @@ void main(void) {
     mcuInit();
 
     rtcInit();
+    
     int oldSec;
     int ampm = 1;
-    char seconds = 0;
-    char mins = 0;
-    char hours = 0;
     oldSec = rtcGetSeconds();
+    struct Time theTime;
 
     while(1){
-        seconds = rtcGetSeconds();
-        if(seconds != oldSec){
-            oldSec = seconds;
+        theTime = rtcGetTime();
+        
+        if(theTime.secs != oldSec){
+            oldSec = theTime.secs;
             ampm = ampm ^ 1;
         }
-        mins = rtcGetMinutes();
-        hours = rtcGetHours();
 
-
-        displayChar((mins & 0x0F), ampm, SRD_MIN);
-        displayChar((mins & 0xF0) >> 4, ampm, SRD_TMIN);
-        displayChar((hours & 0x0F), ampm, SRD_HR);
-        displayChar((hours & 0xF0) >> 4, ampm, SRD_THR);
-
-
+        displayChar((theTime.mins & 0x0F), ampm, SRD_MIN);
+        displayChar((theTime.mins & 0xF0) >> 4, ampm, SRD_TMIN);
+        displayChar((theTime.hours & 0x0F), ampm, SRD_HR);
+        displayChar((theTime.hours & 0xF0) >> 4, ampm, SRD_THR);
     }
 
-    //rtcTest();
-    
     return;
 }
 

@@ -104,3 +104,16 @@ char rtcGetHours(void){
 
     return output;
 }
+
+struct Time rtcGetTime(void){
+    struct Time theTime;
+    rtcToggleCS();
+    rtcAddr(0x00);
+    theTime.secs = rtcData(0x00);
+    theTime.mins = rtcData(0x00);
+    theTime.hours = rtcData(0x00);
+    rtcToggleCS();
+
+    return theTime;
+
+}

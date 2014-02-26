@@ -16,6 +16,7 @@ void rtcTest(void);
 char rtcGetSeconds(void);
 char rtcGetMinutes(void);
 char rtcGetHours(void);
+struct Time rtcGetTime(void);
 
 #endif	/* RTC_H */
 

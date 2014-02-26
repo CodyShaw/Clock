@@ -31,6 +31,12 @@ unsigned char SRD_TMIN;
 unsigned char SRD_HR;
 unsigned char SRD_THR;
 
+typedef struct Time {
+    char secs;
+    char mins;
+    char hours;
+};
+
 #endif	/* CONFIG_H */
 
 
