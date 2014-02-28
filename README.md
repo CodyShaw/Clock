@@ -14,7 +14,9 @@ Writes to shift register for display (Fully functional, seperate Display driver)
 
 What to do:
 =====
-Add buttons for changing the time in real time (interrupt based)
+Create 5V power supply for standalone
+Clean up breadboard
+Put onto protoboard
 
 Includes:
 =====
