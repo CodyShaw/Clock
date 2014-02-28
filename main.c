@@ -18,24 +18,12 @@ void main(void) {
     mcuInit();
 
     rtcInit();
-    
-    int oldSec;
-    int ampm = 1;
-    oldSec = rtcGetSeconds();
-    struct Time theTime;
 
     while(1){
-        theTime = rtcGetTime();
-        
-        if(theTime.secs != oldSec){
-            oldSec = theTime.secs;
-            ampm = ampm ^ 1;
-        }
-
-        displayChar((theTime.mins & 0x0F), ampm, SRD_MIN);
-        displayChar((theTime.mins & 0xF0) >> 4, ampm, SRD_TMIN);
-        displayChar((theTime.hours & 0x0F), ampm, SRD_HR);
-        displayChar((theTime.hours & 0xF0) >> 4, ampm, SRD_THR);
+        INTCONbits.RBIE = 0;
+        rtcGetTime();
+        displayTime();
+        INTCONbits.RBIE = 1;
     }
 
     return;
@@ -43,16 +31,17 @@ void main(void) {
 
 void mcuInit(void){
 
-    TRISB = 0b00000010;
+    TRISB = 0b01100010;
     OPTION_REG = 0x00;
     TRISA = 0x00;
     OSCCON = 0b01110000;
     SSPSTAT = 0b00000000;
     SSPCON = 0b00100010;
     ADCON1 = 0x06;
+    
 
     PORTA = 0b00000000;
-    PORTB = 0x00;
+    PORTB = 0b00000000;
 
     RTC_CS = 0x01;
     SRD_CLOCK = 0x01;
@@ -62,5 +51,32 @@ void mcuInit(void){
     SRD_HR = 0x08;
     SRD_THR = 0x04;
 
+    INTCON = 0b10001000;
+    TICK = 0x00;
+
+
     return;
+}
+
+void interrupt isr(void){
+    
+    INTCONbits.RBIE = 0;
+    INTCONbits.RBIF = 0;
+    int i = 0;
+    int j = 0;
+    while(PORTBbits.RB5 == 0){
+        i = i + 1;
+        if(i == 500){
+            rtcIncMins();
+        }
+    }
+    while(PORTBbits.RB6 == 0){
+        j = j + 1;
+        if(j == 500){
+            rtcIncHrs();
+        }
+    }
+
+    INTCONbits.RBIE = 1;
+
 }

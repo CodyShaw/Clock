@@ -22,9 +22,10 @@ void rtcInit(void){
     rtcAddr(0x80);
     rtcData(0x00);
     rtcData(0x59);
-    rtcData(0x20);
+    rtcData(0x09);
     rtcToggleCS();
 
+    rtcGetTime();
     return;
 }
 
@@ -50,7 +51,6 @@ void rtcTest(void){
 }
 
 char rtcData(char out){
-
     char in;
 
     SSPBUF = out;
@@ -60,10 +60,8 @@ char rtcData(char out){
 }
 
 void rtcAddr(char addr){
-
     SSPBUF = addr;
     while(SSPSTATbits.BF == 0);
-
     return;
 }
 
@@ -105,15 +103,56 @@ char rtcGetHours(void){
     return output;
 }
 
-struct Time rtcGetTime(void){
-    struct Time theTime;
+void rtcGetTime(void){
     rtcToggleCS();
     rtcAddr(0x00);
-    theTime.secs = rtcData(0x00);
-    theTime.mins = rtcData(0x00);
-    theTime.hours = rtcData(0x00);
+    char holdSec = rtcData(0x00);
+    if(GLOBALTIME.secs != holdSec){
+        TICK = TICK ^ 0xFF;
+        GLOBALTIME.secs = holdSec;
+        GLOBALTIME.mins = rtcData(0x00);
+        GLOBALTIME.hours = rtcData(0x00);
+    }
     rtcToggleCS();
+}
 
-    return theTime;
+void rtcSetTime(void){
+    rtcToggleCS();
+    rtcAddr(0x80);
+    rtcData(GLOBALTIME.secs);
+    rtcData(GLOBALTIME.mins);
+    rtcData(GLOBALTIME.hours);
+    rtcToggleCS();
+    return;
+}
 
+void rtcIncMins(void){
+
+    if(GLOBALTIME.mins == 0x59){
+        rtcIncHrs();
+        GLOBALTIME.mins = 0x00;   
+    } else {
+        if((GLOBALTIME.mins & 0x0F) == 0x09){
+            GLOBALTIME.mins = (GLOBALTIME.mins & 0xF0) + 0x10;
+        } else {
+            GLOBALTIME.mins = GLOBALTIME.mins + 1;
+        }
+    }
+
+    rtcSetTime();
+    return;
+}
+
+void rtcIncHrs(void){
+
+    if(GLOBALTIME.hours == 0x23){
+        GLOBALTIME.hours = 0x00;
+    } else if((GLOBALTIME.hours & 0x0F) == 0x09) {
+        GLOBALTIME.hours = (GLOBALTIME.hours & 0xF0) + 0x10;
+    } else {
+        GLOBALTIME.hours = GLOBALTIME.hours + 1;
+    }
+
+    rtcSetTime();
+    return;
 }

@@ -15,6 +15,7 @@ void shiftOut(char, char);
 void displayChar(char, int, char);
 void outputEnable(char);
 void outputDisable(char);
+void displayTime(void);
 
 #endif	/* SHIFTREGDISPLAY_H */
 

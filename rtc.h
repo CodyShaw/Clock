@@ -16,7 +16,11 @@ void rtcTest(void);
 char rtcGetSeconds(void);
 char rtcGetMinutes(void);
 char rtcGetHours(void);
-struct Time rtcGetTime(void);
+void rtcGetTime(void);
+void rtcIncMins(void);
+void rtcIncHrs(void);
+void rtcSetTime(void);
+
 
 #endif	/* RTC_H */
 

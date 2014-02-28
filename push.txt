@@ -1,1 +1,0 @@
-git push https://CodyShaw:<passowrd>@github.com/<username>/<repository-name>
